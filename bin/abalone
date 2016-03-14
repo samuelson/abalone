@@ -1,0 +1,60 @@
+#! /usr/bin/env ruby
+
+require 'rubygems'
+require 'optparse'
+require 'abalone'
+
+gemroot = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+options = {
+  :port           => 9000,
+  :host           => '0.0.0.0',
+  :bind           => '0.0.0.0',
+}
+logfile  = $stderr
+loglevel = Logger::WARN
+
+optparse = OptionParser.new { |opts|
+    opts.banner = "Usage : abalone [-p <port>] [-l [logfile]] [-d]
+         -- Runs the Abalone web shell.
+
+"
+
+    opts.on("-d", "--debug", "Display or log debugging messages") do
+        loglevel = Logger::DEBUG
+    end
+
+    opts.on("--disable DISABLED_CHECKS", "Lint checks to disable. Either comma-separated list or filename.") do |arg|
+        puts "Disabling #{arg}"
+        options[:disabled_lint_checks] = arg
+    end
+
+    opts.on("-l [LOGFILE]", "--logfile [LOGFILE]", "Path to logfile. Defaults to no logging, or /var/log/abalone if no filename is passed.") do |arg|
+        logfile = arg || '/var/log/abalone'
+    end
+
+    opts.on("-p PORT", "--port", "Port to listen on. Defaults to 9000.") do |arg|
+        options[:port] = arg
+    end
+
+    opts.separator('')
+
+    opts.on("-h", "--help", "Displays this help") do
+        puts
+        puts opts
+        puts
+        exit
+    end
+}
+optparse.parse!
+
+logger           = Logger.new(logfile)
+logger.level     = loglevel
+options[:logger] = logger
+
+puts
+puts
+puts "Starting Abalone Web Shell. Browse to http://localhost:#{options[:port]}"
+puts
+puts
+
+Abalone.run! options
