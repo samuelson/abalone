@@ -1,11 +1,28 @@
 var term;
 var buf = '';
-var protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
-var socket   = new WebSocket(protocol + location.host)
+var socket;
 
-socket.onopen    = function()  { connected();            };
-socket.onclose   = function()  { disconnected();         }
-socket.onmessage = function(m) { messageHandler(m.data); };
+function connect(userPrompt) {
+  var protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
+
+  if(socket) {
+    socket.onclose = null;
+    socket.close();
+    document.getElementById("overlay").style.display = "none";
+  }
+
+  if(userPrompt && location.pathname == '/') {
+    var username = prompt('What username would you like to connect with?');
+    socket = new WebSocket(protocol + location.host + '/' + username);
+  }
+  else {
+    socket = new WebSocket(protocol + location.host + location.pathname);
+  }
+
+  socket.onopen    = function()  { connected();            };
+  socket.onclose   = function()  { disconnected();         }
+  socket.onmessage = function(m) { messageHandler(m.data); };
+}
 
 function connected() {
   console.log('Client connected');

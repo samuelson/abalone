@@ -10,20 +10,38 @@ class Abalone < Sinatra::Base
   set :logging, true
   set :strict, true
   set :public_folder, 'public'
+  set :views, 'views'
 
   before {
     env["rack.logger"] = settings.logger if settings.logger
   }
 
-  get '/' do
+  get '/?:user?' do
     if !request.websocket?
-      redirect '/index.html'
+      #redirect '/index.html'
+      @requestUsername = (settings.respond_to?(:ssh) and ! settings.ssh.include?(:user)) rescue false
+      erb :index
     else
       request.websocket do |ws|
+
         ws.onopen do
           warn("websocket opened")
-          reader, @writer, @pid = PTY.spawn(login_binary)
+          reader, @writer, @pid = PTY.spawn(*shell_command)
           @writer.winsize = [24,80]
+
+#           reader.sync = true
+#           EM.add_periodic_timer(0.05) do
+#             begin
+#               PTY.check(@pid, true)
+#               data = reader.read_nonblock(512) # we read non-blocking to stream data as quickly as we can
+#               ws.send({'event' => 'output', 'data' => data}.to_json)
+#             rescue IO::WaitReadable
+#               # nop
+#             rescue PTY::ChildExited => e
+#               puts "Terminal has exited!"
+#               ws.send({'event' => 'logout'}.to_json)
+#             end
+#           end
 
           # there must be some form of event driven pty interaction, EM or some gem maybe?
           reader.sync = true
@@ -41,7 +59,7 @@ class Abalone < Sinatra::Base
                 Thread.exit
               end
               ws.send({'event' => 'output', 'data' => data}.to_json)
-              sleep(0.01)
+              sleep(0.05)
             end
           end
 
@@ -93,11 +111,27 @@ class Abalone < Sinatra::Base
       @term.join
     end
 
-    def login_binary()
-      [ '/bin/login', '/usr/bin/login' ].each do |path|
-        return path if File.executable? path
+    def shell_command()
+      return settings.command if settings.respond_to? :command
+
+      if settings.respond_to? :ssh
+        config = settings.ssh.dup
+        raise "SSH configuration should be a Hash, not a #{config.class}." unless config.class == Hash
+
+        config[:user] ||= params['user']
+        raise "SSH configuration must include the host" unless config.include? :host
+        raise "SSH configuration must include the user" unless config.include? :user
+
+        command = ['ssh', config[:host] ]
+        command << '-l' << config[:user] if config.include? :user
+        command << '-p' << config[:port] if config.include? :port
+        command << '-i' << config[:cert] if config.include? :cert
+
+        return command
       end
-      raise 'No login binary found.'
+
+      # default just to running login
+      'login'
     end
   end
 end

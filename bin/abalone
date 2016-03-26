@@ -3,36 +3,36 @@
 require 'rubygems'
 require 'optparse'
 require 'abalone'
+require 'yaml'
 
-gemroot = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-options = {
+defaults = {
   :port           => 9000,
   :host           => '0.0.0.0',
   :bind           => '0.0.0.0',
 }
-logfile  = $stderr
-loglevel = Logger::WARN
-
+logfile    = $stderr
+loglevel   = Logger::WARN
+configfile = '/etc/abalone/config.yaml'
+options    = {}
 optparse = OptionParser.new { |opts|
     opts.banner = "Usage : abalone [-p <port>] [-l [logfile]] [-d]
          -- Runs the Abalone web shell.
 
 "
 
-    opts.on("-d", "--debug", "Display or log debugging messages") do
-        loglevel = Logger::DEBUG
+    opts.on("-c CONFIGFILE", "--config CONFIGFILE", "Load configuration from a file. (/etc/abalone/config.yaml)") do
+        configfile = arg
     end
 
-    opts.on("--disable DISABLED_CHECKS", "Lint checks to disable. Either comma-separated list or filename.") do |arg|
-        puts "Disabling #{arg}"
-        options[:disabled_lint_checks] = arg
+    opts.on("-d", "--debug", "Display or log debugging messages") do
+        loglevel = Logger::DEBUG
     end
 
     opts.on("-l [LOGFILE]", "--logfile [LOGFILE]", "Path to logfile. Defaults to no logging, or /var/log/abalone if no filename is passed.") do |arg|
         logfile = arg || '/var/log/abalone'
     end
 
-    opts.on("-p PORT", "--port", "Port to listen on. Defaults to 9000.") do |arg|
+    opts.on("-p PORT", "--port PORT", "Port to listen on. Defaults to 9000.") do |arg|
         options[:port] = arg
     end
 
@@ -50,6 +50,11 @@ optparse.parse!
 logger           = Logger.new(logfile)
 logger.level     = loglevel
 options[:logger] = logger
+
+config  = YAML.load_file(configfile) rescue {}
+options = defaults.merge(config.merge(options))
+
+raise 'Specify only one of a login command or SSH settings' if options.include? :command and options.include? :ssh
 
 puts
 puts
