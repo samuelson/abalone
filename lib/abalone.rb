@@ -111,8 +111,67 @@ class Abalone < Sinatra::Base
       @term.join
     end
 
+    def sanitized(params)
+      params.reject do |key,val|
+        ['user','captures','splat'].include? key
+      end
+    end
+
+    def allowed(param, value)
+      return true unless param.include? :values
+
+      allowed = param[:values]
+      raise "Expected #{key}:values to be an array of strings or regexes" unless allowed.class == Array
+
+      allowed.select! do |pattern|
+        case pattern
+        when String
+          value == pattern
+        when Regexp
+          pattern.match(value)
+        else
+          false
+        end
+      end
+
+      ! allowed.empty?
+    end
+
+    def getparam(key)
+      param = settings.params.detect {|item| item == key || item.include?(key) }
+
+      case param
+      when String
+        param
+      when Hash
+        param.values.first
+      end
+    end
+
     def shell_command()
-      return settings.command if settings.respond_to? :command
+      if settings.respond_to? :command
+        return settings.command unless settings.respond_to? :params
+
+        command = settings.command
+        command = command.split if command.class == String
+
+        sanitized(params).each do |key, val|
+          param = getparam(key)
+          case param
+          when nil
+            next
+          when String
+            command << "--#{key}" << val
+          when Hash
+            next unless allowed(param, val)
+
+            command << (param[:map] || key)
+            command << val
+          end
+        end
+
+        return command
+      end
 
       if settings.respond_to? :ssh
         config = settings.ssh.dup

@@ -13,10 +13,10 @@ function connect(userPrompt) {
 
   if(userPrompt && location.pathname == '/') {
     var username = prompt('What username would you like to connect with?');
-    socket = new WebSocket(protocol + location.host + '/' + username);
+    socket = new WebSocket(protocol + location.host + '/' + username + location.search);
   }
   else {
-    socket = new WebSocket(protocol + location.host + location.pathname);
+    socket = new WebSocket(protocol + location.host + location.pathname + location.search);
   }
 
   socket.onopen    = function()  { connected();            };
