@@ -113,39 +113,27 @@ class Abalone < Sinatra::Base
 
     def sanitized(params)
       params.reject do |key,val|
-        ['user','captures','splat'].include? key
+        ['captures','splat'].include? key
       end
     end
 
     def allowed(param, value)
-      return true unless param.include? :values
+      return false unless settings.params.include? param
 
-      allowed = param[:values]
-      raise "Expected #{key}:values to be an array of strings or regexes" unless allowed.class == Array
+      config = settings.params[param]
+      return true if config.nil?
+      return true unless config.include? :values
 
-      allowed.select! do |pattern|
+      config[:values].each do |pattern|
         case pattern
         when String
-          value == pattern
+          return true if value == pattern
         when Regexp
-          pattern.match(value)
-        else
-          false
+          return true if pattern.match(value)
         end
       end
 
-      ! allowed.empty?
-    end
-
-    def getparam(key)
-      param = settings.params.detect {|item| item == key || item.include?(key) }
-
-      case param
-      when String
-        param
-      when Hash
-        param.values.first
-      end
+      false
     end
 
     def shell_command()
@@ -155,18 +143,16 @@ class Abalone < Sinatra::Base
         command = settings.command
         command = command.split if command.class == String
 
-        sanitized(params).each do |key, val|
-          param = getparam(key)
-          case param
-          when nil
-            next
-          when String
-            command << "--#{key}" << val
-          when Hash
-            next unless allowed(param, val)
+        sanitized(params).each do |param, value|
+          next unless allowed(param, value)
 
-            command << (param[:map] || key)
-            command << val
+          config = settings.params[param]
+          case config
+          when nil
+            command << "--#{param}" << value
+          when Hash
+            command << (config[:map] || "--#{param}")
+            command << value
           end
         end
 
@@ -175,11 +161,12 @@ class Abalone < Sinatra::Base
 
       if settings.respond_to? :ssh
         config = settings.ssh.dup
-        raise "SSH configuration should be a Hash, not a #{config.class}." unless config.class == Hash
+        config[:user] ||= params['user'] # if not in the config file, it must come from the user
 
-        config[:user] ||= params['user']
-        raise "SSH configuration must include the host" unless config.include? :host
-        raise "SSH configuration must include the user" unless config.include? :user
+        if config[:user].nil?
+          warn "SSH configuration must include the user"
+          return ['echo', 'no username provided']
+        end
 
         command = ['ssh', config[:host] ]
         command << '-l' << config[:user] if config.include? :user

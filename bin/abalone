@@ -54,7 +54,34 @@ options[:logger] = logger
 config  = YAML.load_file(configfile) rescue {}
 options = defaults.merge(config.merge(options))
 
+if options[:params].class == Hash
+  options[:params].each do |param, data|
+    next if data.nil?
+    next unless data.include? :values
+
+    data[:values].collect! do |value|
+      case value
+      when Regexp
+        value
+      when String
+        # if a string encapsulated regex, replace with that regex
+        value =~ /^\/(.*)\/$/ ? Regexp.new($1) : value
+      end
+    end
+  end
+end
+
 raise 'Specify only one of a login command or SSH settings' if options.include? :command and options.include? :ssh
+
+if options.include? :command
+  raise ":params must be an Array or Hash, not #{options[:params].class}" unless [Array, Hash].include? options[:params].class
+  raise ":command should be a String or an Array, not a #{options[:command].class}." unless [Array, String].include? options[:command].class
+end
+
+if options.include? :ssh
+  raise "SSH configuration should be a Hash, not a #{options[:ssh].class}." unless options[:ssh].class == Hash
+  raise "SSH configuration must include the host" unless options[:ssh].include? :host
+end
 
 puts
 puts
