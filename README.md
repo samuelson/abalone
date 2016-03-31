@@ -5,8 +5,8 @@ A simple Sinatra & hterm based web terminal.
 
 1. [Overview](#overview)
 1. [Configuration](#configuration)
-  1. [SSH](#configuring-ssh)
-  1. [Custom Login Command](#configuring-a-custom-command)
+    1. [SSH](#configuring-ssh)
+    1. [Custom Login Command](#configuring-a-custom-command)
 1. [Limitations](#limitations)
 
 ## Overview
@@ -34,7 +34,11 @@ can set several options:
 * `:bind`
   * The hostname or IP address of the interface to listen on.
   * Default value: `0.0.0.0` (listen to all interfaces.)
-* One of `:command` or `:ssh`, exclusive.
+* `:logfile`
+  * The path of a file to log to.
+  * Default value: Log only to `STDERR`. If you pass `-l` at the command line
+    with no filename, it will log to `/var/log/abalone`.
+* One of [`:command`](#configuring-a-custom-command) or [`:ssh`](#configuring-ssh), exclusive.
   * The login method to use. Abalone can use `login`, SSH, or a custom command
     to start a shell. See configuration instructions below.
   * Default value: uses the `login` binary, with no configuration possible.

@@ -6,11 +6,10 @@ require 'abalone'
 require 'yaml'
 
 defaults = {
-  :port           => 9000,
-  :host           => '0.0.0.0',
-  :bind           => '0.0.0.0',
+  :port    => 9000,
+  :bind    => '0.0.0.0',
+  :logfile => $stderr,
 }
-logfile    = $stderr
 loglevel   = Logger::WARN
 configfile = '/etc/abalone/config.yaml'
 options    = {}
@@ -29,7 +28,7 @@ optparse = OptionParser.new { |opts|
     end
 
     opts.on("-l [LOGFILE]", "--logfile [LOGFILE]", "Path to logfile. Defaults to no logging, or /var/log/abalone if no filename is passed.") do |arg|
-        logfile = arg || '/var/log/abalone'
+        options[:logfile] = arg || defaults[:logfile] || '/var/log/abalone'
     end
 
     opts.on("-p PORT", "--port PORT", "Port to listen on. Defaults to 9000.") do |arg|
@@ -47,12 +46,12 @@ optparse = OptionParser.new { |opts|
 }
 optparse.parse!
 
-logger           = Logger.new(logfile)
-logger.level     = loglevel
-options[:logger] = logger
-
 config  = YAML.load_file(configfile) rescue {}
 options = defaults.merge(config.merge(options))
+
+logger           = Logger.new(options[:logfile])
+logger.level     = loglevel
+options[:logger] = logger
 
 if options[:params].class == Hash
   options[:params].each do |param, data|
