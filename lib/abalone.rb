@@ -46,10 +46,15 @@ class Abalone < Sinatra::Base
           # there must be some form of event driven pty interaction, EM or some gem maybe?
           reader.sync = true
           @term = Thread.new do
+            carry = []
             loop do
               begin
                 PTY.check(@pid, true)
-                data = reader.read_nonblock(512) # we read non-blocking to stream data as quickly as we can
+                output = reader.read_nonblock(512).unpack('c*') # we read non-blocking to stream data as quickly as we can
+                index = output.rindex { |x| x < 128 } # find the last low bit
+                carry = output[index...-11]           # save the any remaining high bits and partial chars for next go-round
+                data  = (carry + output[0..index]).pack('c*').force_encoding('UTF-8') # and pack the rest back into a string to send
+
                 ws.send(data)
 
               rescue IO::WaitReadable
