@@ -59,29 +59,11 @@ function disconnected() {
 }
 
 function messageHandler(data) {
-  message = JSON.parse(data);
-
-  switch(message['event']) {
-    case 'output':
-      if (!term) {
-          buf += message['data'];
-          return;
-      }
-      term.io.writeUTF16(message['data']);
-      break;
-
-    case 'logout':
-      console.log("user logout");
-      disconnected();
-      break;
-
-    case 'disconnect':
-      disconnected();
-      break;
-
-    default:
-
+  if (!term) {
+      buf += data;
+      return;
   }
+  term.io.writeUTF16(data);
 }
 
 /* borrowed from https://github.com/krishnasrinivas/wetty */

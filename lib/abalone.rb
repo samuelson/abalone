@@ -9,8 +9,8 @@ require 'io/console'
 class Abalone < Sinatra::Base
   set :logging, true
   set :strict, true
-  set :public_folder, 'public'
-  set :views, 'views'
+  set :public_folder, "#{settings.root}/../public"
+  set :views, "#{settings.root}/../views"
 
   before {
     env["rack.logger"] = settings.logger if settings.logger
@@ -50,15 +50,17 @@ class Abalone < Sinatra::Base
               begin
                 PTY.check(@pid, true)
                 data = reader.read_nonblock(512) # we read non-blocking to stream data as quickly as we can
+                ws.send(data)
+
               rescue IO::WaitReadable
                 IO.select([reader])
                 retry
               rescue PTY::ChildExited => e
-                puts "Terminal has exited!"
-                ws.send({'event' => 'logout'}.to_json)
+                warn('Terminal has exited!')
+                ws.close_connection
+
                 Thread.exit
               end
-              ws.send({'event' => 'output', 'data' => data}.to_json)
               sleep(0.05)
             end
           end
@@ -66,7 +68,7 @@ class Abalone < Sinatra::Base
         end
 
         ws.onclose do
-          warn("websocket closed")
+          warn('websocket closed')
           stop_term()
         end
 
@@ -91,9 +93,10 @@ class Abalone < Sinatra::Base
               warn("Unrecognized message: #{message.inspect}")
             end
           rescue Errno::EIO => e
-            puts "Terminal has died!"
+            puts "Remote terminal closed."
             puts e.message
-            ws.send({'event' => 'logout'}.to_json)
+            stop_term()
+
           end
 
         end
@@ -108,7 +111,7 @@ class Abalone < Sinatra::Base
   helpers do
     def stop_term()
       Process.kill('TERM', @pid) rescue nil
-      @term.join
+      @term.join rescue nil
     end
 
     def sanitized(params)

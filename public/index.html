@@ -36,8 +36,8 @@
       </style>
   </head>
 
-  <body>
-      <div id="overlay"><input type="button" onclick="javascript:location.reload();" value="reconnect" /></div>
+  <body onload="connect();">
+      <div id="overlay"><input type="button" onclick="javascript:connect();" value="reconnect" /></div>
       <div id="terminal"></div>
   </body>
 
