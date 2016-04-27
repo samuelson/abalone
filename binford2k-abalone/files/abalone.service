@@ -1,0 +1,11 @@
+[Unit]
+Description=Abalone Web Shell
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/abalone
+Restart=on-failure
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
