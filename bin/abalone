@@ -73,7 +73,7 @@ end
 raise 'Specify only one of a login command or SSH settings' if options.include? :command and options.include? :ssh
 
 if options.include? :command
-  raise ":params must be an Array or Hash, not #{options[:params].class}" unless [Array, Hash].include? options[:params].class
+  raise ":params must be an Array or Hash, not #{options[:params].class}" unless [Array, Hash, NilClass].include? options[:params].class
   raise ":command should be a String or an Array, not a #{options[:command].class}." unless [Array, String].include? options[:command].class
 end
 
