@@ -1,0 +1,35 @@
+{
+  "name": "binford2k-abalone",
+  "version": "0.0.1",
+  "author": "binford2k",
+  "summary": "Sets up the Abalone web shell. Only tested on CentOS 7.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/binford2k/binford2k-abalone",
+  "project_page": "https://github.com/binford2k/abalone",
+  "issues_url": "https://github.com/binford2k/abalone/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">=3.0.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">=3.0.0 <5.0.0"
+    }
+  ]
+}
+
