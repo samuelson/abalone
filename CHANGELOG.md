@@ -1,3 +1,8 @@
+# v0.2.0
+
+* Added autoconnect setting so you can require users click
+  a button to start their session.
+
 # v0.1.1
 
 * Fixed a crashing UTF8 bug
