@@ -5,10 +5,12 @@ var socket;
 function connect(userPrompt) {
   var protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
 
+  // hide the connect button
+  document.getElementById("overlay").style.display = "none";
+
   if(socket) {
     socket.onclose = null;
     socket.close();
-    document.getElementById("overlay").style.display = "none";
   }
 
   if(userPrompt && location.pathname == '/') {

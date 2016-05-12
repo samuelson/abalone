@@ -28,6 +28,10 @@ Abalone defaults to loading configuration from `/etc/abalone/config.yaml`. You
 can pass the path to another config file at the command line. In that file, you
 can set several options:
 
+* `:autoconnect`
+  * Set this to true if you'd like the session to start on page load and false
+    if you'd like the user to click a *Start Session* button instead. Defaults
+    to `true`.
 * `:port`
   * Which port to run the server on.
   * Default value: `9000`

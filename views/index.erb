@@ -18,7 +18,7 @@
               height: 100%;
               width: 100%;
               background-color: rgba(0,0,0,0.75);
-              display: none;
+              <% if @autoconnect %>display: none;<% end %>
           }
           #overlay input {
               display: block;
@@ -36,8 +36,8 @@
       </style>
   </head>
 
-  <body onload="connect(<%= @requestUsername %>);">
-      <div id="overlay"><input type="button" onclick="javascript:connect(<%= @requestUsername %>);" value="reconnect" /></div>
+  <body <% if @autoconnect %>onload="connect(<%= @requestUsername %>);"<% end %>>
+      <div id="overlay"><input type="button" onclick="javascript:connect(<%= @requestUsername %>);" value="Start Session" /></div>
       <div id="terminal"></div>
   </body>
 

@@ -20,6 +20,7 @@ class Abalone < Sinatra::Base
     if !request.websocket?
       #redirect '/index.html'
       @requestUsername = (settings.respond_to?(:ssh) and ! settings.ssh.include?(:user)) rescue false
+      @autoconnect     = settings.autoconnect
       erb :index
     else
       request.websocket do |ws|

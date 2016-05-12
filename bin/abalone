@@ -6,9 +6,10 @@ require 'abalone'
 require 'yaml'
 
 defaults = {
-  :port    => 9000,
-  :bind    => '0.0.0.0',
-  :logfile => $stderr,
+  :port        => 9000,
+  :bind        => '0.0.0.0',
+  :logfile     => $stderr,
+  :autoconnect => true,
 }
 loglevel   = Logger::WARN
 configfile = '/etc/abalone/config.yaml'
