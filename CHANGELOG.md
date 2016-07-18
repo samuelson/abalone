@@ -1,3 +1,7 @@
+# v0.2.1
+
+* Fixed a string encoding issue that could sometimes cause wedged shells.
+
 # v0.2.0
 
 * Added autoconnect setting so you can require users click

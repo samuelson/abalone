@@ -76,7 +76,7 @@ command without providing any options, the config file would look like:
 #### Simple options
 
 You can also allow the user to pass in a arbitrary options. These must be
-whitelisted. You can simply list allowed options in an Array: 
+whitelisted. You can simply list allowed options in an Array:
 
 ``` Yaml
 ---
