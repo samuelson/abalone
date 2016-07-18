@@ -14,6 +14,13 @@ class Abalone < Sinatra::Base
 
   before {
     env["rack.logger"] = settings.logger if settings.logger
+
+    trap('INT') do
+      # this forces all the spawned children to terminate as well
+      puts "Caught SIGINT. Terminating active sessions (#{Process.pid}) now."
+      exit!
+    end
+
   }
 
   get '/?:user?' do
