@@ -1,3 +1,7 @@
+# v0.3.0
+
+* Adds a timeout counter, allowing a maximum life setting for shells.
+
 # v0.2.1
 
 * Fixed a string encoding issue that could sometimes cause wedged shells.
