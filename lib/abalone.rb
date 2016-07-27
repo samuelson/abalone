@@ -147,7 +147,9 @@ class Abalone < Sinatra::Base
 
   helpers do
     def stop_term()
-      Process.kill('HUP', @pid) rescue nil
+      Process.kill('TERM', @pid) rescue nil
+      sleep 1
+      Process.kill('KILL', @pid) rescue nil
       @term.join rescue nil
     end
 
