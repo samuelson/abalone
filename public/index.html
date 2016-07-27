@@ -12,6 +12,14 @@
               width: 100%;
               margin: 0px;
           }
+          #timer {
+              position: absolute;
+              z-index: 1000;
+              top: 15px;
+              right: 15px;
+              opacity: 0.5;
+              display: none;
+          }
           #overlay {
               position: absolute;
               z-index: 1000;
@@ -37,6 +45,7 @@
   </head>
 
   <body onload="connect();">
+      <div id="timer"></div>
       <div id="overlay"><input type="button" onclick="javascript:connect();" value="reconnect" /></div>
       <div id="terminal"></div>
   </body>

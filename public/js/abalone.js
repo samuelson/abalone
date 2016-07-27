@@ -60,12 +60,24 @@ function disconnected() {
   document.getElementById("overlay").style.display = "block";
 }
 
-function messageHandler(data) {
-  if (!term) {
-      buf += data;
-      return;
+function messageHandler(message) {
+  var message = JSON.parse(message);
+  var event = message['event'];
+  var data  = message['data'];
+
+  switch(event) {
+    case 'time':
+      document.getElementById("timer").style.display = "block";
+      document.getElementById("timer").innerHTML = data;
+      break;
+
+    default:
+      if (!term) {
+          buf += data;
+          return;
+      }
+      term.io.writeUTF16(data);
   }
-  term.io.writeUTF16(data);
 }
 
 /* borrowed from https://github.com/krishnasrinivas/wetty */

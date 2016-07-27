@@ -42,6 +42,11 @@ can set several options:
   * The path of a file to log to.
   * Default value: Log only to `STDERR`. If you pass `-l` at the command line
     with no filename, it will log to `/var/log/abalone`.
+* `:timeout`
+  * Maximum number of seconds a session can last. The shell will be killed at the
+    end of that time. For example, set it to 300 for shells that last for up to
+    five minutes.
+  * Default value: unset.
 * One of [`:command`](#configuring-a-custom-command) or [`:ssh`](#configuring-ssh), exclusive.
   * The login method to use. Abalone can use `login`, SSH, or a custom command
     to start a shell. See configuration instructions below.

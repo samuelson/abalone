@@ -66,7 +66,7 @@ class Abalone < Sinatra::Base
                 data  = (carry + output[0..last_low]).pack('C*').force_encoding('UTF-8') # repack into a string up until the last low bit
                 carry = output[trailing..-1]             # save the any remaining high bits and partial chars for next go-round
 
-                ws.send(data)
+                ws.send({'data' => data}.to_json)
 
               rescue IO::WaitReadable
                 IO.select([reader])
@@ -76,9 +76,29 @@ class Abalone < Sinatra::Base
                 warn('Terminal has exited!')
                 ws.close_connection
 
+                @timer.terminate
+                @timer.join rescue nil
                 Thread.exit
               end
+
               sleep(0.05)
+            end
+          end
+
+          if settings.respond_to? :timeout
+            @timer = Thread.new do
+              expiration = Time.now + settings.timeout
+              loop do
+                remaining = expiration - Time.now
+                stop_term if remaining < 0
+
+                time = {
+                  'event' => 'time',
+                  'data'  => Time.at(remaining).utc.strftime("%H:%M:%S"),
+                }
+                ws.send(time.to_json)
+                sleep 1
+              end
             end
           end
 
@@ -127,7 +147,7 @@ class Abalone < Sinatra::Base
 
   helpers do
     def stop_term()
-      Process.kill('TERM', @pid) rescue nil
+      Process.kill('HUP', @pid) rescue nil
       @term.join rescue nil
     end
 
