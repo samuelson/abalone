@@ -76,7 +76,7 @@ class Abalone < Sinatra::Base
                 warn('Terminal has exited!')
                 ws.close_connection
 
-                @timer.terminate
+                @timer.terminate rescue nil
                 @timer.join rescue nil
                 Thread.exit
               end
