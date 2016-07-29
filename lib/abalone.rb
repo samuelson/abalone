@@ -34,6 +34,8 @@ class Abalone < Sinatra::Base
 
         ws.onopen do
           warn("websocket opened")
+          ENV['TERM'] ||= 'xterm' # make sure we've got a somewhat sane environment
+
           reader, @writer, @pid = PTY.spawn(*shell_command)
           @writer.winsize = [24,80]
 
