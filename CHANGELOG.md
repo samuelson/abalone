@@ -1,3 +1,7 @@
+# v0.3.1
+
+* Ensures the environment is somewhat sane.
+
 # v0.3.0
 
 * Adds a timeout counter, allowing a maximum life setting for shells.
