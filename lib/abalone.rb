@@ -9,6 +9,7 @@ require 'io/console'
 class Abalone < Sinatra::Base
   set :logging, true
   set :strict, true
+  set :protection, :except => :frame_options
   set :public_folder, "#{settings.root}/../public"
   set :views, "#{settings.root}/../views"
 
