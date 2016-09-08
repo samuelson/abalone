@@ -1,3 +1,7 @@
+# v0.3.2
+
+* Disable X-Frame-Options so this can be easily embedded.
+
 # v0.3.1
 
 * Ensures the environment is somewhat sane.
