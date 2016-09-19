@@ -1,15 +1,16 @@
 class abalone (
-  $port        = $abalone::params::port,
-  $bind        = $abalone::params::bind,
-  $method      = $abalone::params::method,
-  $path        = $abalone::params::path,
-  $logfile     = $abalone::params::logfile,
-  $ssh_host    = $abalone::params::ssh_host,
-  $ssh_cert    = $abalone::params::ssh_cert,
-  $ssh_port    = $abalone::params::ssh_port,
-  $ssh_user    = $abalone::params::ssh_user,
-  $command     = $abalone::params::command,
-  $params      = $abalone::params::params,
+  $port                    = $abalone::params::port,
+  $bind                    = $abalone::params::bind,
+  $method                  = $abalone::params::method,
+  $path                    = $abalone::params::path,
+  $logfile                 = $abalone::params::logfile,
+  $ssh_host                = $abalone::params::ssh_host,
+  $ssh_cert                = $abalone::params::ssh_cert,
+  $ssh_port                = $abalone::params::ssh_port,
+  $ssh_user                = $abalone::params::ssh_user,
+  $command                 = $abalone::params::command,
+  $params                  = $abalone::params::params,
+  $server_service_provider = $abalone::params::server_service_provider,
 ) inherits abalone::params {
   # TODO: parameter validation
 
