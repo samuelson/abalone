@@ -71,6 +71,9 @@ if options[:params].class == Hash
   end
 end
 
+# This is the unix standard, so we'll default to this if enabled, but unspecified
+options[:bannerfile] = '/etc/issue.net' if options[:bannerfile] == true
+
 raise 'Specify only one of a login command or SSH settings' if options.include? :command and options.include? :ssh
 
 if options.include? :command

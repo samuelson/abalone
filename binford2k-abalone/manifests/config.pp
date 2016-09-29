@@ -3,6 +3,7 @@ class abalone::config {
   $port        = $abalone::port
   $bind        = $abalone::bind
   $method      = $abalone::method
+  $bannerfile  = $abalone::bannerfile
   $logfile     = $abalone::logfile
   $ssh_host    = $abalone::ssh_host
   $ssh_cert    = $abalone::ssh_cert

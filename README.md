@@ -38,6 +38,10 @@ can set several options:
 * `:bind`
   * The hostname or IP address of the interface to listen on.
   * Default value: `0.0.0.0` (listen to all interfaces.)
+* `:bannerfile`
+  * File to display before login. This does not interpret special characters the way `getty` does.
+  * `true`, `false`, or filename to display.
+  * Default value: `false`, or `/etc/issue.net` if set to `true`.
 * `:logfile`
   * The path of a file to log to.
   * Default value: Log only to `STDERR`. If you pass `-l` at the command line

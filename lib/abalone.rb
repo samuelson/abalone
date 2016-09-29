@@ -37,6 +37,11 @@ class Abalone < Sinatra::Base
           warn("websocket opened")
           ENV['TERM'] ||= 'xterm' # make sure we've got a somewhat sane environment
 
+          if settings.respond_to?(:bannerfile)
+            ws.send({'data' => File.read(settings.bannerfile).encode(crlf_newline: true)}.to_json)
+            ws.send({'data' => "\r\n\r\n"}.to_json)
+          end
+
           reader, @writer, @pid = PTY.spawn(*shell_command)
           @writer.winsize = [24,80]
 

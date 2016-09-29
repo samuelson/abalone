@@ -3,6 +3,7 @@ class abalone (
   $bind        = $abalone::params::bind,
   $method      = $abalone::params::method,
   $path        = $abalone::params::path,
+  $bannerfile  = $abalone::params::bannerfile,
   $logfile     = $abalone::params::logfile,
   $ssh_host    = $abalone::params::ssh_host,
   $ssh_cert    = $abalone::params::ssh_cert,
