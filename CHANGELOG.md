@@ -1,3 +1,12 @@
+# v0.3.3
+
+* Added a new `bannerfile` setting.
+* Set to:
+    * filename to display
+    * `false`: no file is displayed
+    * `true: display `/etc/issue.net`
+
+
 # v0.3.2
 
 * Disable X-Frame-Options so this can be easily embedded.
