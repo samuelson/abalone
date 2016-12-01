@@ -24,6 +24,12 @@ class Abalone < Sinatra::Base
 
   }
 
+  # super low cost heartbeat response.
+  # Add this first to ensure that the user route doesn't take precedence.
+  get '/heartbeat/ping' do
+    'alive'
+  end
+
   get '/?:user?' do
     if !request.websocket?
       #redirect '/index.html'

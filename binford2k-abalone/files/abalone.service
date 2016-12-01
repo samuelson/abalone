@@ -4,7 +4,9 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/abalone
+WatchdogSec=30s
 Restart=on-failure
+NotifyAccess=all
 KillSignal=SIGINT
 
 [Install]
