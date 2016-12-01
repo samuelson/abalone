@@ -4,6 +4,10 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/abalone
+<% if @watchdog -%>
+WatchdogSec=30s
+NotifyAccess=all
+<% end -%>
 Restart=on-failure
 KillSignal=SIGINT
 

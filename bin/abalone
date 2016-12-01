@@ -86,6 +86,14 @@ if options.include? :ssh
   raise "SSH configuration must include the host" unless options[:ssh].include? :host
 end
 
+# If we're running under systemd, start a watchdog to let it know we're still alive.
+# If four sequential pings fail, then systemd will kill & respawn us.
+if ENV.include? 'WATCHDOG_USEC'
+  require 'abalone/watchdog'
+  # 1/4 of the timeout period, in seconds
+  Abalone::Watchdog.new(Integer(ENV['WATCHDOG_USEC'])/4000000, options)
+end
+
 puts
 puts
 puts "Starting Abalone Web Shell. Browse to http://localhost:#{options[:port]}"

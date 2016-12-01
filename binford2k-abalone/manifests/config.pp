@@ -11,6 +11,7 @@ class abalone::config {
   $ssh_user    = $abalone::ssh_user
   $command     = $abalone::command
   $params      = $abalone::params
+  $watchdog    = $abalone::watchdog
 
   File {
     owner  => 'root',
@@ -36,7 +37,7 @@ class abalone::config {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => file('abalone/abalone.service'),
+    content => template('abalone/abalone.service.erb'),
     before  => Service['abalone'],
   }
 
