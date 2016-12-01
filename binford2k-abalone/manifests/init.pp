@@ -11,6 +11,7 @@ class abalone (
   $ssh_user    = $abalone::params::ssh_user,
   $command     = $abalone::params::command,
   $params      = $abalone::params::params,
+  $watchdog    = $abalone::params::watchdog,
 ) inherits abalone::params {
   # TODO: parameter validation
 
