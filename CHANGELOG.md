@@ -1,3 +1,7 @@
+# v0.3.4
+
+* Added a watchdog when running under systemd.
+
 # v0.3.3
 
 * Added a new `bannerfile` setting.
