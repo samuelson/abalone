@@ -1,3 +1,6 @@
+# v0.0.6
+* Adding watchdog support
+
 # v0.0.5
 * Hotpatching is never a good idea
 
