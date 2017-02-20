@@ -1,0 +1,141 @@
+<html
+	<head>
+		<title>Abalone Web Shell Demo</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="http://localhost:9000/css/launcher.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="http://localhost:9000/js/launcher.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+
+      $(document).ready(function() {
+
+        $('pre.popup').AbaloneLauncher({
+           label: "Try out a popup!",
+           title: "Isn't this neat?",
+          server: "http://localhost:9000",
+        });
+
+        $('pre.inline').AbaloneLauncher({
+             label: "Try it out inline!",
+            target: "inline",
+            server: "http://localhost:9000",
+        });
+
+        $('pre.targeted').AbaloneLauncher({
+             label: "Try it out!",
+            target: "#abalone-shell",
+          location: "se",
+            server: "http://localhost:9000",
+        });
+
+        $('a#launcher').AbaloneLauncher({
+          server: "http://localhost:9000",
+        });
+
+      });
+    </script>
+
+    <style>
+      #container {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #ccc;
+      }
+      table {
+        width: 75%;
+        margin: 0 auto;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid black;
+        padding: 0 0.25em;
+      }
+      .column {
+        width: 50%;
+        margin: 0 1em;
+      }
+      .console {
+        border: 4px solid #a53737;
+        padding: 8px;
+        margin: 0;
+      }
+      #abalone-shell iframe {
+        height: 500px;
+      }
+    </style>
+
+	</head>
+	<body>
+  	<h1>Abalone Web Shell launcher demo</h1>
+    <p>
+      This page demonstrates some of the ways you can use the Abalone launcher system.
+      The minimum external dependencies are jQuery and jQuery UI. See the source code
+      of this page and read the <code>README.me</code> for more configuration info.
+    </p>
+
+  	<div id="container">
+    	<div id="content" class="column">
+        <h3>Targeted Demo</h3>
+        <p>
+          If you pass a selector to a container element when you declare the launcher
+          then the terminal window will be injected into that container.
+        </p>
+
+        <pre class="targeted"><code class="language-javascript">$('pre.targeted').AbaloneLauncher({
+     label: "Try it out!",
+    target: "#abalone-shell",
+  location: "se",
+    server: "http://localhost:9000",
+});</code></pre>
+
+        <h3>Inline Demo</h3>
+        <p>
+          Declare the target as <code>inline</code> and the terminal will be appended
+          to the container element that you attached the launcher to.
+        </p>
+
+        <pre class="inline"><code class="language-javascript">$('pre.inline').AbaloneLauncher({
+   label: "Try it out inline!",
+  target: "inline",
+  server: "http://localhost:9000",
+});</code></pre>
+
+        <h3>Popup Demo</h3>
+        <p>
+          If you don't declare a target, or if you set it to <code>popup</code>, then you'll
+          get a popup dialog with a terminal in it.
+        </p>
+
+        <pre class="popup"><code class="language-javascript">$('pre.popup').AbaloneLauncher({
+   label: "Try out a popup!",
+   title: "Isn't this neat?",
+  server: "http://localhost:9000",
+});</code></pre>
+
+        <h3>Trigger via a link</h3>
+        <p>
+          You can attach the launcher to any element. If it's a <code>block</code> element,
+          like the prior examples, then the launcher button will be injected into it and if
+          it's an <code>inline</code> element, <a href="#" id="launcher">like this</a>
+          then it will trigger the terminal directly.
+        </p>
+
+        <pre><code class="language-javascript">$('a#launcher').AbaloneLauncher({
+  server: "http://localhost:9000",
+});</code></pre>
+
+      </div>
+
+      <div id="workspace" class="column">
+        <h2>Workspace</h2>
+        <div class="console"><div id="abalone-shell"></div></div>
+      </div>
+
+    </div>
+	</body>
+</html>

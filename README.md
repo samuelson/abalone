@@ -7,6 +7,7 @@ A simple Sinatra & hterm based web terminal.
 1. [Configuration](#configuration)
     1. [SSH](#configuring-ssh)
     1. [Custom Login Command](#configuring-a-custom-command)
+1. [jQuery plugin](#jquery-plugin)
 1. [Limitations](#limitations)
 
 ## Overview
@@ -139,6 +140,79 @@ The options in this case will be passed to the command like:
 * Invalid options and values are ignored:
   * http://localhost:9000/?username=bob&image=testing&invalid=value
   * `/usr/local/bin/run-container --username bob`
+
+## jQuery Plugin
+
+Abalone comes with a build in jQuery plugin that makes it very easy to use. You
+can attach the launcher to any element. If it's a `block` element, then a launcher
+button will be injected inside, and if it's `inline` then it will directly trigger
+the terminal.
+
+See a demo of the launcher in action after installation by starting the server and
+browsing to [http://localhost:9000/demo.html](http://localhost:9000/demo.html).
+Adjust the URL and port as needed.
+
+The minimum external dependencies are jQuery and jQuery UI:
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+To load and initialize the launcher, you'll need to load the CSS and Javascript
+from a running Abalone instance like below. Notice the full URL, including the
+port number. Alternatively, you can pull those from the repository and host them
+along with the rest of your HTML.
+
+    <link rel="stylesheet" href="http://localhost:9000/css/launcher.css">
+    <script src="http://localhost:9000/js/launcher.js"></script>
+
+Then you'll simply declare one or more launchers on any element you choose. Note
+that you must pass in the server parameter. This should be the location of your
+Abalone server, including the port it's running on.
+
+    <script>
+      $(document).ready(function() {
+
+        $('pre.popup').AbaloneLauncher({
+           label: "Try out a popup!",
+           title: "Isn't this neat?",
+          server: "http://localhost:9000",
+        });
+
+        $('pre.inline').AbaloneLauncher({
+             label: "Try it out inline!",
+            target: "inline",
+            server: "http://localhost:9000",
+        });
+
+        $('pre.targeted').AbaloneLauncher({
+             label: "Try it out!",
+            target: "#abalone-shell",
+          location: "se",
+            server: "http://localhost:9000",
+        });
+
+        $('a#launcher').AbaloneLauncher({
+          server: "http://localhost:9000",
+          params: { "type": "demo", "uuid": generateUUID() },
+        });
+
+      });
+    </script>
+
+### Configuration Options
+
+| Option     | Valid values                                   | Default               |
+|------------|------------------------------------------------|-----------------------|
+| `location` | `ne`, `se`, `sw`, `nw`                         | `ne`                  |
+| `label`    | *String*                                       | *Launch*              |
+| `title`    | *String*                                       | *Abalone Web Shell*   |
+| `target`   | `popup`, `inline`, CSS selector of a container | `popup`               |
+| `params`   | parameters to be passed to the server          | `{}`                  |
+| `server`   | URL to the Abalone server, including port      | `null` (**required**) |
+| `height`   | *Integer*                                      | `480`                 |
+| `width`    | *Integer*                                      | `640`                 |
+
 
 ## Limitations
 

@@ -1,0 +1,43 @@
+input[type=button].abalone.control {
+  position: absolute;
+  border-radius: 3px;
+  background-color: #dedede;
+  border: 1px solid #ccc;
+  font-size: 0.75em;
+  margin: 0.25em;
+}
+input[type=button].abalone.control:hover {
+  background-color: #707070;
+  color: #fff;
+}
+input[type=button].abalone.control:hover:disabled,
+input[type=button].abalone.control:disabled {
+  background-color: #e4e4e4;
+  color: #afafaf;
+}
+
+
+.abalone.control.location-ne,
+.abalone.control.location-nw {
+  top: 0;
+}
+.abalone.control.location-se,
+.abalone.control.location-sw {
+  bottom: 0;
+}
+.abalone.control.location-ne,
+.abalone.control.location-se {
+  right: 0;
+}
+.abalone.control.location-nw,
+.abalone.control.location-sw {
+  left: 0;
+}
+
+iframe.abalone {
+  width: 100% !important;
+}
+iframe.abalone.popup {
+  padding: 0;
+  margin: 0;
+}
