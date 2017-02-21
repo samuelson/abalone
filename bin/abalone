@@ -2,8 +2,9 @@
 
 require 'rubygems'
 require 'optparse'
-require 'abalone'
 require 'yaml'
+require 'abalone'
+require 'abalone/terminal'
 
 defaults = {
   :port        => 9000,
