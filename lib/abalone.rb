@@ -39,11 +39,10 @@ class Abalone < Sinatra::Base
         uid = session.id
         ws.onopen do
           warn("websocket opened")
+          # expire all dead terminals
+          settings.active.delete_if {|uid, term| ! term.alive? }
 
-          @terminal = settings.active[uid]
-
-          if @terminal and @terminal.alive?
-            @terminal = settings.active[uid]
+          if @terminal = settings.active[uid]
             @terminal.reconnect(ws)
           else
             warn "Starting a new session for #{uid}."

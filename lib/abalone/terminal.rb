@@ -53,12 +53,15 @@ class Abalone::Terminal
       end
     end
 
-    if settings.respond_to? :timeout
+    if @settings.respond_to? :timeout
       @timer = Thread.new do
-        expiration = Time.now + settings.timeout
+        expiration = Time.now + @settings.timeout
         loop do
           remaining = expiration - Time.now
-          terminate! if remaining < 0
+          if remaining < 0
+            terminate!
+            exit
+          end
 
           time = {
             'event' => 'time',
@@ -95,7 +98,8 @@ class Abalone::Terminal
     if @settings.respond_to? :ttl
       @ws  = @buffer
       @ttl = Thread.new do
-        sleep settings.ttl
+        warn "Providing a shutdown grace period of #{@settings.ttl} seconds."
+        sleep @settings.ttl
         terminate!
       end
     else
@@ -104,6 +108,7 @@ class Abalone::Terminal
   end
 
   def terminate!
+    warn "Terminating session."
     Process.kill('TERM', @pid) rescue nil
     sleep 1
     Process.kill('KILL', @pid) rescue nil
