@@ -9,6 +9,9 @@ class Abalone < Sinatra::Base
   set :protection, :except => :frame_options
   set :public_folder, "#{settings.root}/../public"
   set :views, "#{settings.root}/../views"
+  set :active, {}
+
+  enable :sessions
 
   before {
     env["rack.logger"] = settings.logger if settings.logger
@@ -18,7 +21,6 @@ class Abalone < Sinatra::Base
       puts "Caught SIGINT. Terminating active sessions (#{Process.pid}) now."
       exit!
     end
-
   }
 
   # super low cost heartbeat response.
@@ -34,15 +36,30 @@ class Abalone < Sinatra::Base
       erb :index
     else
       request.websocket do |ws|
-
+        uid = session.id
         ws.onopen do
           warn("websocket opened")
-          @terminal = Abalone::Terminal.new(settings, ws, sanitized(params))
+
+          @terminal = settings.active[uid]
+
+          if @terminal and @terminal.alive?
+            @terminal = settings.active[uid]
+            @terminal.reconnect(ws)
+          else
+            warn "Starting a new session for #{uid}."
+            @terminal = Abalone::Terminal.new(settings, ws, sanitized(params))
+
+            if settings.respond_to? :ttl
+              settings.active[uid] = @terminal
+              logger.debug "Saving session #{uid}."
+              logger.debug "Active sessions: #{settings.active.keys.inspect}"
+            end
+          end
         end
 
         ws.onclose do
           warn('websocket closed')
-          @terminal.stop if @terminal
+          @terminal.stop! if @terminal
         end
 
         ws.onmessage do |message|
@@ -60,15 +77,15 @@ class Abalone < Sinatra::Base
 
             when 'logout', 'disconnect'
               warn("Client exited.")
-              @terminal.stop()
+              @terminal.stop!
 
             else
               warn("Unrecognized message: #{message.inspect}")
             end
           rescue Errno::EIO => e
-            puts "Remote terminal closed."
-            puts e.message
-            @terminal.stop()
+            warn "Remote terminal closed."
+            warn e.message
+            @terminal.stop!
 
           end
 

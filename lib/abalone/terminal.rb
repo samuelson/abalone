@@ -1,17 +1,19 @@
 require 'pty'
 require 'io/console'
+require 'abalone/buffer'
 
 class Abalone::Terminal
   def initialize(settings, ws, params)
     @settings = settings
     @ws       = ws
     @params   = params
+    @buffer   = Abalone::Buffer.new
 
     ENV['TERM'] ||= 'xterm' # make sure we've got a somewhat sane environment
 
     if settings.respond_to?(:bannerfile)
-      ws.send({'data' => File.read(settings.bannerfile).encode(crlf_newline: true)}.to_json)
-      ws.send({'data' => "\r\n\r\n"}.to_json)
+      @ws.send({'data' => File.read(settings.bannerfile).encode(crlf_newline: true)}.to_json)
+      @ws.send({'data' => "\r\n\r\n"}.to_json)
     end
 
     reader, @writer, @pid = PTY.spawn(*shell_command)
@@ -32,7 +34,7 @@ class Abalone::Terminal
           data  = (carry + output[0..last_low]).pack('C*').force_encoding('UTF-8') # repack into a string up until the last low bit
           carry = output[trailing..-1]             # save the any remaining high bits and partial chars for next go-round
 
-          ws.send({'data' => data}.to_json)
+          @ws.send({'data' => data}.to_json)
 
         rescue IO::WaitReadable
           IO.select([reader])
@@ -40,7 +42,7 @@ class Abalone::Terminal
 
         rescue PTY::ChildExited => e
           warn('Terminal has exited!')
-          ws.close_connection
+          @ws.close_connection
 
           @timer.terminate rescue nil
           @timer.join rescue nil
@@ -56,7 +58,7 @@ class Abalone::Terminal
         expiration = Time.now + settings.timeout
         loop do
           remaining = expiration - Time.now
-          stop if remaining < 0
+          terminate! if remaining < 0
 
           time = {
             'event' => 'time',
@@ -69,11 +71,39 @@ class Abalone::Terminal
     end
   end
 
+  def alive?
+    @term.alive?
+  end
+
+  def reconnect(ws)
+    if @ttl # stop the countdown
+      warn "Stopping timeout"
+      @ttl.terminate rescue nil
+      @ttl.join rescue nil
+      @ttl = nil
+    end
+    @ws = ws
+    @ws.send({'data' => @buffer.replay}.to_json)
+    @writer.write "\cl" # ctrl-l forces a screen redraw
+  end
+
   def write(message)
     @writer.write message
   end
 
-  def stop
+  def stop!
+    if @settings.respond_to? :ttl
+      @ws  = @buffer
+      @ttl = Thread.new do
+        sleep settings.ttl
+        terminate!
+      end
+    else
+      terminate!
+    end
+  end
+
+  def terminate!
     Process.kill('TERM', @pid) rescue nil
     sleep 1
     Process.kill('KILL', @pid) rescue nil
@@ -85,7 +115,7 @@ class Abalone::Terminal
   end
 
   private
-  def shell_command()
+  def shell_command
     if @settings.respond_to? :command
       return @settings.command unless @settings.respond_to? :params
 
