@@ -60,7 +60,7 @@ class Abalone::Terminal
           remaining = expiration - Time.now
           if remaining < 0
             terminate!
-            exit
+            Thread.exit
           end
 
           time = {
