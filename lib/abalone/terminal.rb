@@ -67,7 +67,7 @@ class Abalone::Terminal
             'event' => 'time',
             'data'  => Time.at(remaining).utc.strftime("%H:%M:%S"),
           }
-          ws.send(time.to_json)
+          @ws.send(time.to_json)
           sleep 1
         end
       end
