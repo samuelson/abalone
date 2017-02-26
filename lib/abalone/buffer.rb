@@ -10,6 +10,10 @@ class Abalone::Buffer
     nil
   end
 
+  def close_connection
+    # nop
+  end
+
   def replay
     retval  = @buffer
     @buffer = ''

@@ -53,6 +53,16 @@ function connected() {
           buf = '';
       }
   });
+
+  /* save our terminal state on the server periodically, just in case we restart a session */
+  // TODO: should we patch hterm to do this only when modes are set?
+  setInterval(function() {
+    socket.send(JSON.stringify({
+      event: 'modes',
+       data: getModes()
+    }));
+  }, 5000);
+
 }
 
 function disconnected() {
@@ -71,6 +81,9 @@ function messageHandler(message) {
       document.getElementById("timer").innerHTML = data;
       break;
 
+    case 'modes':
+      setModes(data);
+
     default:
       if (!term) {
           buf += data;
@@ -78,6 +91,22 @@ function messageHandler(message) {
       }
       term.io.writeUTF16(data);
   }
+}
+
+function getModes() {
+  return {
+    "cursorBlink"       : term.vt.terminal.options_.cursorBlink,
+    "cursorVisible"     : term.vt.terminal.options_.cursorVisible,
+    "bracketedPaste"    : term.vt.terminal.options_.bracketedPaste,
+    "applicationCursor" : term.vt.terminal.keyboard.applicationCursor
+  };
+}
+
+function setModes(modes) {
+  term.vt.terminal.options_.cursorBlink       = modes["cursorBlink"];
+  term.vt.terminal.options_.cursorVisible     = modes["cursorVisible"];
+  term.vt.terminal.options_.bracketedPaste    = modes["bracketedPaste"];
+  term.vt.terminal.keyboard.applicationCursor = modes["applicationCursor"];
 }
 
 /* borrowed from https://github.com/krishnasrinivas/wetty */

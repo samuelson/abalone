@@ -7,9 +7,10 @@ class Abalone::Terminal
     @settings = settings
     @ws       = ws
     @params   = params
+    @modes    = nil
     @buffer   = Abalone::Buffer.new
 
-    ENV['TERM'] ||= 'xterm' # make sure we've got a somewhat sane environment
+    ENV['TERM'] ||= 'xterm-256color' # make sure we've got a somewhat sane environment
 
     if settings.respond_to?(:bannerfile)
       @ws.send({'data' => File.read(settings.bannerfile).encode(crlf_newline: true)}.to_json)
@@ -85,13 +86,27 @@ class Abalone::Terminal
       @ttl.join rescue nil
       @ttl = nil
     end
+    @ws.close_connection if @ws
     @ws = ws
+
+    sleep 0.25 # allow the terminal to finish initialization before we blast it.
+
+    if @modes
+      @ws.send({
+        'event' => 'modes',
+        'data'  => @modes
+      }.to_json)
+    end
     @ws.send({'data' => @buffer.replay}.to_json)
     @writer.write "\cl" # ctrl-l forces a screen redraw
   end
 
   def write(message)
     @writer.write message
+  end
+
+  def modes=(message)
+    @modes = message
   end
 
   def stop!
@@ -112,7 +127,11 @@ class Abalone::Terminal
     Process.kill('TERM', @pid) rescue nil
     sleep 1
     Process.kill('KILL', @pid) rescue nil
-    @term.join rescue nil
+
+    [@ttl, @timer, @term].each do |thread|
+      thread.terminate rescue nil
+      thread.join rescue nil
+    end
   end
 
   def resize(rows, cols)

@@ -69,6 +69,9 @@ class Abalone < Sinatra::Base
             when 'input'
               @terminal.write(message['data'])
 
+            when 'modes'
+              @terminal.modes = message['data']
+
             when 'resize'
               row = message['row']
               col = message['col']
