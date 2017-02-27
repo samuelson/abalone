@@ -55,7 +55,7 @@ function connected() {
   });
 
   /* save our terminal state on the server periodically, just in case we restart a session */
-  // TODO: should we patch hterm to do this only when modes are set?
+  // Note: Don't try to tie it to the setDECMode() method as that's called all the time.
   setInterval(function() {
     socket.send(JSON.stringify({
       event: 'modes',

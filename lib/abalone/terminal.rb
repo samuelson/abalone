@@ -106,7 +106,10 @@ class Abalone::Terminal
   end
 
   def modes=(message)
-    @modes = message
+    raise 'Invalid modes data type' unless message.is_a? Hash
+    @modes = message.select do |key, val|
+      ['cursorBlink', 'cursorVisible', 'bracketedPaste', 'applicationCursor'].include? key
+    end
   end
 
   def stop!
