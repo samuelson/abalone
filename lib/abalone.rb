@@ -33,7 +33,7 @@ class Abalone < Sinatra::Base
     if @terminal = settings.active[session.id]
       @terminal.terminate!
     end
-    'ok'
+    redirect to('/')
   end
 
   get '/?:user?' do

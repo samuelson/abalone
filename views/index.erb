@@ -3,52 +3,19 @@
   <head>
       <meta charset="UTF-8">
       <title>Abalone Web Shell</title>
+      <link rel="stylesheet" href="css/terminal.css">
       <script src="js/hterm_all.js"></script>
       <script src="js/abalone.js"></script>
-      <style>
-          html,
-          body {
-              height: 100%;
-              width: 100%;
-              margin: 0px;
-          }
-          #timer {
-              position: absolute;
-              z-index: 1000;
-              top: 15px;
-              right: 15px;
-              opacity: 0.25;
-              font-size: 3em;
-              font-weight: bolder;
-              color: red;
-              display: none;
-          }
-          #overlay {
-              position: absolute;
-              z-index: 1000;
-              height: 100%;
-              width: 100%;
-              background-color: rgba(0,0,0,0.75);
-              <% if @autoconnect %>display: none;<% end %>
-          }
-          #overlay input {
-              display: block;
-              margin: auto;
-              position: relative;
-              top: 50%;
-              transform: translateY(-50%);
-          }
-          #terminal {
-              display: block;
-              position: relative;
-              width: 100%;
-              height: 100%;
-          }
-      </style>
   </head>
 
   <body <% if @autoconnect %>onload="connect(<%= @requestUsername %>);"<% end %>>
       <div id="timer"></div>
+      <div id="settings">
+        <ul>
+          <li><a href="/api/reset">Reset Terminal</a></li>
+          <li><a href="https://github.com/binford2k/abalone" target="_new">Project Page</a></li>
+        </ul>
+      </div>
       <div id="overlay"><input type="button" onclick="javascript:connect(<%= @requestUsername %>);" value="Start Session" /></div>
       <div id="terminal"></div>
   </body>
