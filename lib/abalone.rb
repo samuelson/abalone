@@ -29,6 +29,13 @@ class Abalone < Sinatra::Base
     'alive'
   end
 
+  get '/api/reset' do
+    if @terminal = settings.active[session.id]
+      @terminal.terminate!
+    end
+    'ok'
+  end
+
   get '/?:user?' do
     if !request.websocket?
       @requestUsername = (settings.respond_to?(:ssh) and ! settings.ssh.include?(:user)) rescue false
