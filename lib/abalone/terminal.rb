@@ -64,9 +64,10 @@ class Abalone::Terminal
             Thread.exit
           end
 
+          format = (remaining > 3600) ? "%H:%M:%S" : "%M:%S"
           time = {
             'event' => 'time',
-            'data'  => Time.at(remaining).utc.strftime("%H:%M:%S"),
+            'data'  => Time.at(remaining).utc.strftime(format),
           }
           @ws.send(time.to_json)
           sleep 1
