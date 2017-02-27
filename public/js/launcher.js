@@ -74,6 +74,10 @@
               element.append(abalone);
               break;
 
+            case "tab":
+              window.open(serverURL, 'abaloneTerminal');
+              break
+
             /* Assume that the user has passed in a string as a selector target */
             default:
               var abalone = $("<iframe>", { "class": "abalone targeted", "src": serverURL });
@@ -82,8 +86,8 @@
               break;
           }
 
-          /* swap out for the close button, unless we're using a popup */
-          if (settings.target != "popup") {
+          /* swap out for the close button, unless we're using a popup/tab */
+          if (["popup", "tab"].indexOf(settings.target) == -1) {
             var close = $("<input>", {
                "type": "button",
               "class": "abalone inline control exit location-" + settings.location,

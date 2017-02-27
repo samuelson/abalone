@@ -33,6 +33,13 @@
             server: "http://localhost:9000",
         });
 
+        $('pre.tab').AbaloneLauncher({
+             label: "Try it in a new tab/window!",
+            target: "tab",
+          location: "se",
+            server: "http://localhost:9000",
+        });
+
         $('a#launcher').AbaloneLauncher({
           server: "http://localhost:9000",
         });
@@ -115,6 +122,19 @@
    label: "Try out a popup!",
    title: "Isn't this neat?",
   server: "http://localhost:9000",
+});</code></pre>
+
+        <h3>Tab/Window Demo</h3>
+        <p>
+          Declare the target as <code>tab</code> and the terminal will be opened in a new
+          tab or window, depending on browser preferences.
+        </p>
+
+        <pre class="tab"><code class="language-javascript">$('pre.tab').AbaloneLauncher({
+     label: "Try it in a new tab/window!",
+    target: "tab",
+  location: "se",
+    server: "http://localhost:9000",
 });</code></pre>
 
         <h3>Trigger via a link</h3>
