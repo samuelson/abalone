@@ -27,32 +27,37 @@ body {
     background-position: right top;
     background-repeat: no-repeat;
 }
-  #settings ul {
-      display: none;
-  }
-  #settings:hover {
-      opacity: 1.0;
-      width: auto;
-      height: auto;
-      background-color: #b6a5a0;
-      background-image: none;
-      color: #fff;
-      font-weight: bold;
-      border: 1px solid #ccc;
-  }
-    #settings:hover ul {
+    #settings a,
+    #settings:hover ul,
+    #settings:hover ul li {
         display: block;
-        list-style-type: none;
         padding: 0;
         margin: 0;
     }
-    #settings:hover ul li {
-        display: block;
+    #settings ul {
+        display: none;
+    }
+    #settings a {
+        text-decoration: none;
         padding-right: 1em;
+        color: blue;
     }
-    #settings:hover ul li:hover {
-        background-color: #ccc;
+    #settings:hover {
+        opacity: 1.0;
+        width: auto;
+        height: auto;
+        background-color: #b6a5a0;
+        background-image: none;
+        color: #fff;
+        font-weight: bold;
+        border: 1px solid #ccc;
     }
+        #settings:hover ul {
+            list-style-type: none;
+        }
+        #settings:hover ul li:hover {
+            background-color: #ccc;
+        }
 #overlay {
     position: absolute;
     z-index: 1000;
