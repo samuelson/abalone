@@ -52,6 +52,15 @@ can set several options:
     end of that time. For example, set it to 300 for shells that last for up to
     five minutes.
   * Default value: unset.
+* `:ttl`
+  * The number of seconds a session should last after disconnecting. If you reconnect
+    within this grace period, you'll be reconnected to your session without interruption.
+    This cannot yet restore the secondary terminal buffer, so if you're running something
+    like Vim, you may have to run `clear` or `reset` after exiting to get your console
+    sane again.
+  * Note that `:timeout` takes precedence, so if your session times out, even during
+    the `:ttl` grace period, it will be killed. 
+  * Default value: unset.
 * One of [`:command`](#configuring-a-custom-command) or [`:ssh`](#configuring-ssh), exclusive.
   * The login method to use. Abalone can use `login`, SSH, or a custom command
     to start a shell. See configuration instructions below.
@@ -202,16 +211,16 @@ Abalone server, including the port it's running on.
 
 ### Configuration Options
 
-| Option     | Valid values                                   | Default               |
-|------------|------------------------------------------------|-----------------------|
-| `location` | `ne`, `se`, `sw`, `nw`                         | `ne`                  |
-| `label`    | *String*                                       | *Launch*              |
-| `title`    | *String*                                       | *Abalone Web Shell*   |
-| `target`   | `popup`, `inline`, CSS selector of a container | `popup`               |
-| `params`   | parameters to be passed to the server          | `{}`                  |
-| `server`   | URL to the Abalone server, including port      | `null` (**required**) |
-| `height`   | *Integer*                                      | `480`                 |
-| `width`    | *Integer*                                      | `640`                 |
+| Option     | Valid values                                          | Default               |
+|------------|-------------------------------------------------------|-----------------------|
+| `location` | `ne`, `se`, `sw`, `nw`                                | `ne`                  |
+| `label`    | *String*                                              | *Launch*              |
+| `title`    | *String*                                              | *Abalone Web Shell*   |
+| `target`   | `popup`, `inline`, `tab`, CSS selector of a container | `popup`               |
+| `params`   | parameters to be passed to the server                 | `{}`                  |
+| `server`   | URL to the Abalone server, including port             | `null` (**required**) |
+| `height`   | *Integer*                                             | `480`                 |
+| `width`    | *Integer*                                             | `640`                 |
 
 
 ## Limitations
