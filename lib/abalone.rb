@@ -40,6 +40,13 @@ class Abalone < Sinatra::Base
     if !request.websocket?
       @requestUsername = (settings.respond_to?(:ssh) and ! settings.ssh.include?(:user)) rescue false
       @autoconnect     = settings.autoconnect
+      if settings.respond_to?(:welcome)
+        begin
+          @welcome = File.file?(settings.welcome) ? File.read(settings.welcome) : settings.welcome
+        rescue => e
+          warn e.message
+        end
+      end
       erb :index
     else
       request.websocket do |ws|

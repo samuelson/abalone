@@ -6,6 +6,14 @@
       <link rel="stylesheet" href="css/terminal.css">
       <script src="js/hterm_all.js"></script>
       <script src="js/abalone.js"></script>
+
+      <% if @autoconnect %>
+      <style>
+        #overlay {
+            display: none;
+        }
+      </style>
+      <% end %>
   </head>
 
   <body <% if @autoconnect %>onload="connect(<%= @requestUsername %>);"<% end %>>
@@ -16,7 +24,10 @@
           <li><a href="https://github.com/binford2k/abalone" target="_new">Project Page</a></li>
         </ul>
       </div>
-      <div id="overlay"><input type="button" onclick="javascript:connect(<%= @requestUsername %>);" value="Start Session" /></div>
+      <div id="overlay">
+        <% if @welcome %><div id="welcome"><%= @welcome %></div><% end %>
+        <input type="button" onclick="javascript:connect(<%= @requestUsername %>);" value="Start Session" />
+      </div>
       <div id="terminal"></div>
   </body>
 

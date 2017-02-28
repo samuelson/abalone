@@ -43,6 +43,10 @@ can set several options:
   * File to display before login. This does not interpret special characters the way `getty` does.
   * `true`, `false`, or filename to display.
   * Default value: `false`, or `/etc/issue.net` if set to `true`.
+* `:welcome`
+  * A message to display prior to starting a session. This is on the overlay with the
+    *Start Session* button. Pass a string of text, or a filename. HTML will be interpreted.
+  * Default value: unset
 * `:logfile`
   * The path of a file to log to.
   * Default value: Log only to `STDERR`. If you pass `-l` at the command line
