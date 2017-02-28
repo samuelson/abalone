@@ -1,3 +1,12 @@
+# v0.4.0
+
+* Add a `:ttl` setting, which lets you reconnect to a running session for a
+  given number of seconds after disconnecting. This allows you to resume sessions
+  interrupted by network instability, for example.
+* Add a menu option to force a terminal reset, e.g. killing & restarting.
+* Add a jQuery plugin which makes it trivial to use Abalone in an existing page.
+* Add a `:welcome` setting, which puts a message on the *Start Session* overlay.
+
 # v0.3.4
 
 * Added a watchdog when running under systemd.
