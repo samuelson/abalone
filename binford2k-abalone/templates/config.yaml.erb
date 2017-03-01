@@ -15,12 +15,24 @@
   :port:
 <% end -%>
 <% end -%>
-<% if @command -%>
-:command: <%= @command %>
+<% if @autoconnect -%>
+:autoconnect: <%= @autoconnect %>
+<% end -%>
+<% if @ttl -%>
+:ttl: <%= @ttl %>
+<% end -%>
+<% if @timeout -%>
+:timeout: <%= @timeout %>
 <% end -%>
 <% if @bannerfile -%>
 :bannerfile: <%= @bannerfile %>
-<% end %>
+<% end -%>
+<% if @welcome -%>
+:welcome: <%= @welcome %>
+<% end -%>
+<% if @command -%>
+:command: <%= @command %>
+<% end -%>
 <% if @params -%>
 :params:
 <% if @params.class == Hash -%>

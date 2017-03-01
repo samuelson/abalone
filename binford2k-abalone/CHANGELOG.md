@@ -1,3 +1,10 @@
+# v0.0.7
+* Adding params for all supported features
+  * autoconnect
+  * timeout
+  * ttl
+  * welcome
+
 # v0.0.6
 * Adding watchdog support
 
