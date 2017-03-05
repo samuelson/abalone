@@ -2,12 +2,13 @@ require 'date'
 
 Gem::Specification.new do |s|
   s.name              = "abalone"
-  s.version           = '0.4.0'
+  s.version           = '0.4.1'
   s.date              = Date.today.to_s
   s.summary           = "Simple Sinatra based web terminal."
   s.homepage          = "https://github.com/binford2k/abalone/"
   s.email             = "binford2k@gmail.com"
   s.authors           = ["Ben Ford"]
+  s.license           = "Apache-2.0"
   s.has_rdoc          = false
   s.require_path      = "lib"
   s.executables       = %w( abalone )

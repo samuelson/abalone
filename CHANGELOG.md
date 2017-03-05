@@ -1,3 +1,7 @@
+# v0.4.1
+
+* Corrected param handling when defined as an array in the `config.yaml`.
+
 # v0.4.0
 
 * Add a `:ttl` setting, which lets you reconnect to a running session for a
