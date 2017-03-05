@@ -151,13 +151,17 @@ class Abalone::Terminal
       command = command.split if command.class == String
 
       @params.each do |param, value|
-        config = @settings.params[param]
-        case config
-        when nil
+        if @settings.params.is_a? Array
           command << "--#{param}" << value
-        when Hash
-          command << (config[:map] || "--#{param}")
-          command << value
+        else
+          config = @settings.params[param]
+          case config
+          when nil
+            command << "--#{param}" << value
+          when Hash
+            command << (config[:map] || "--#{param}")
+            command << value
+          end
         end
       end
 

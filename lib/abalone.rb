@@ -124,6 +124,7 @@ class Abalone < Sinatra::Base
 
     def allowed(param, value)
       return false unless settings.params.include? param
+      return true if settings.params.is_a? Array
 
       config = settings.params[param]
       return true if config.nil?
